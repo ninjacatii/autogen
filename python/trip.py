@@ -39,6 +39,6 @@ async def main() -> None:
     group_chat = RoundRobinGroupChat(
         [planner_agent, local_agent, language_agent, travel_summary_agent], termination_condition=termination
     )
-    await Console(group_chat.run_stream(task="Plan a 3 day trip to Nepal."))
+    await Console(group_chat.run_stream(task="Plan a 3 day trip to China."))
 
 asyncio.run(main())

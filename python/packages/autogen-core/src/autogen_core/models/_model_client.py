@@ -33,6 +33,10 @@ class ModelFamily:
     CLAUDE_3_5_HAIKU = "claude-3.5-haiku"
     CLAUDE_3_5_SONNET = "claude-3.5-sonnet"
     CLAUDE_3_7_SONNET = "claude-3.7-sonnet"
+    QWQ_32B = "qwq-32b"
+    QWEN_PLUS = "qwen-plus"
+    DEEPSEEK_CHAT = "deepseek-chat"
+    DEEPSEEK_REASONER = "deepseek-reasoner"
     UNKNOWN = "unknown"
 
     ANY: TypeAlias = Literal[
@@ -50,6 +54,10 @@ class ModelFamily:
         "claude-3-opus",
         "claude-3.5-haiku",
         "claude-3.5-sonnet",
+        "qwq-32b",
+        "qwen-plus",
+        "deepseek-chat",
+        "deepseek-reasoner",
         "unknown",
     ]
 

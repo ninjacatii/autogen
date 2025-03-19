@@ -1299,6 +1299,16 @@ class OpenAIChatCompletionClient(BaseOpenAIChatCompletionClient, Component[OpenA
                 copied_args["base_url"] = _model_info.GEMINI_OPENAI_BASE_URL
             if "api_key" not in copied_args and "GEMINI_API_KEY" in os.environ:
                 copied_args["api_key"] = os.environ["GEMINI_API_KEY"]
+        if copied_args["model"].startswith("qwq-") or copied_args["model"].startswith("qwen-"):
+            if "base_url" not in copied_args:
+                copied_args["base_url"] = _model_info.QWQ_OPENAI_BASE_URL
+            if "api_key" not in copied_args and "QWQ_API_KEY" in os.environ:
+                copied_args["api_key"] = os.environ["QWQ_API_KEY"]
+        if copied_args["model"].startswith("deepseek-"):
+            if "base_url" not in copied_args:
+                copied_args["base_url"] = _model_info.DEEPSEEK_OPENAI_BASE_URL
+            if "api_key" not in copied_args and "DEEPSEEK_API_KEY" in os.environ:
+                copied_args["api_key"] = os.environ["DEEPSEEK_API_KEY"]
 
         client = _openai_client_from_config(copied_args)
         create_args = _create_args_from_config(copied_args)

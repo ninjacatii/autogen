@@ -35,13 +35,18 @@ async def get_news(query: str) -> List[Dict[str, str]]:
     ]
 
 model_client = OpenAIChatCompletionClient(
+    #model="deepseek-reasoner",//不支持
+    #model="deepseek-chat",//支持差
+    #model="qwen-plus",
     model="gemini-2.0-flash",
+    temperature=0,
     # api_key="YOUR_API_KEY",
 )
 
 planner = AssistantAgent(
     "planner",
     model_client=model_client,
+    # model_client_stream=True,
     handoffs=["financial_analyst", "news_analyst", "writer"],
     system_message="""You are a research planning coordinator.
     Coordinate market research by delegating to specialized agents:
@@ -56,6 +61,7 @@ planner = AssistantAgent(
 financial_analyst = AssistantAgent(
     "financial_analyst",
     model_client=model_client,
+    # model_client_stream=True,
     handoffs=["planner"],
     tools=[get_stock_data],
     system_message="""You are a financial analyst.
@@ -67,6 +73,7 @@ financial_analyst = AssistantAgent(
 news_analyst = AssistantAgent(
     "news_analyst",
     model_client=model_client,
+    # model_client_stream=True,
     handoffs=["planner"],
     tools=[get_news],
     system_message="""You are a news analyst.

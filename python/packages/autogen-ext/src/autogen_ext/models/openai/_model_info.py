@@ -188,6 +188,34 @@ _MODEL_INFO: Dict[str, ModelInfo] = {
         "family": ModelFamily.GEMINI_2_0_FLASH,
         "structured_output": True,
     },
+    "qwq-32b": {
+        "vision": True,
+        "function_calling": True,
+        "json_output": True,
+        "family": ModelFamily.QWQ_32B,
+        "structured_output": True,
+    },
+    "qwen-plus": {
+        "vision": True,
+        "function_calling": True,
+        "json_output": True,
+        "family": ModelFamily.QWEN_PLUS,
+        "structured_output": True,
+    },
+    "deepseek-chat": {
+        "vision": True,
+        "function_calling": True,
+        "json_output": True,
+        "family": ModelFamily.DEEPSEEK_CHAT,
+        "structured_output": True,
+    },
+    "deepseek-reasoner": {
+        "vision": True,
+        "function_calling": True,
+        "json_output": True,
+        "family": ModelFamily.DEEPSEEK_REASONER,
+        "structured_output": True,
+    },
 }
 
 _MODEL_TOKEN_LIMITS: Dict[str, int] = {
@@ -214,9 +242,15 @@ _MODEL_TOKEN_LIMITS: Dict[str, int] = {
     "gemini-1.5-flash-8b": 1048576,
     "gemini-1.5-pro": 2097152,
     "gemini-2.0-flash": 1048576,
+    "qwq-32b": 32768,
+    "qwen-plus": 131072,
+    "deepseek-chat": 128000,
+    "deepseek-reasoner": 128000,
 }
 
 GEMINI_OPENAI_BASE_URL = "https://generativelanguage.googleapis.com/v1beta/openai/"
+QWQ_OPENAI_BASE_URL = "https://dashscope.aliyuncs.com/compatible-mode/v1/"
+DEEPSEEK_OPENAI_BASE_URL = "https://api.deepseek.com/v1/"
 
 
 def resolve_model(model: str) -> str:

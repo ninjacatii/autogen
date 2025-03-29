@@ -2,7 +2,7 @@ import asyncio
 
 from typing import Any, Dict, List
 
-from autogen_agentchat.agents import AssistantAgent
+from autogen_agentchat.agents import AssistantAgent, UserProxyAgent
 from autogen_agentchat.conditions import HandoffTermination, TextMentionTermination
 from autogen_agentchat.messages import HandoffMessage
 from autogen_agentchat.teams import Swarm
@@ -47,7 +47,7 @@ planner = AssistantAgent(
     "planner",
     model_client=model_client,
     # model_client_stream=True,
-    handoffs=["financial_analyst", "news_analyst", "writer"],
+    handoffs=["financial_analyst", "news_analyst", "writer", "user_proxy_agent"],
     system_message="""You are a research planning coordinator.
     Coordinate market research by delegating to specialized agents:
     - Financial Analyst: For stock data analysis
@@ -55,6 +55,7 @@ planner = AssistantAgent(
     - Writer: For compiling final report
     Always send your plan first, then handoff to appropriate agent.
     Always handoff to a single agent at a time.
+    Always handoff to user_proxy_agent when nothing to do or research is complete.
     Use TERMINATE when research is complete.""",
 )
 
@@ -82,6 +83,11 @@ news_analyst = AssistantAgent(
     Always handoff back to planner when analysis is complete.""",
 )
 
+user_proxy_agent = UserProxyAgent(
+    "user_proxy_agent", 
+    description="A proxy for the user to approve or disapprove tasks.",
+)
+
 writer = AssistantAgent(
     "writer",
     model_client=model_client,
@@ -95,10 +101,12 @@ writer = AssistantAgent(
 async def main() -> None:
     # Define termination condition
     text_termination = TextMentionTermination("TERMINATE")
-    termination = text_termination
+    text_termination1 = TextMentionTermination("Research complete")
+    termination = text_termination | text_termination1
 
     research_team = Swarm(
-        participants=[planner, financial_analyst, news_analyst, writer], termination_condition=termination
+        participants=[planner, financial_analyst, news_analyst, writer, user_proxy_agent], 
+        termination_condition=termination,
     )
 
     task = "Conduct market research for TSLA stock"

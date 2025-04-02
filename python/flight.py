@@ -1,13 +1,41 @@
-import asyncio
+import os
+from pathlib import Path
 
-from typing import Any, Dict, List
+import asyncio
+from typing import Sequence
 
 from autogen_agentchat.agents import AssistantAgent
 from autogen_agentchat.conditions import HandoffTermination, TextMentionTermination
-from autogen_agentchat.messages import HandoffMessage
+from autogen_agentchat.messages import HandoffMessage, AgentEvent, ChatMessage
 from autogen_agentchat.teams import Swarm
 from autogen_agentchat.ui import Console
+from autogen_core.memory import MemoryContent, MemoryMimeType
 from autogen_ext.models.openai import OpenAIChatCompletionClient
+from autogen_ext.memory.chromadb import ChromaDBVectorMemory, PersistentChromaDBVectorMemoryConfig
+
+# 添加连接Chroma数据库并写入数据的函数
+async def write_to_chroma(data : Sequence[AgentEvent | ChatMessage]):
+    # Initialize ChromaDB memory with custom config
+    chroma_user_memory = ChromaDBVectorMemory(
+        config=PersistentChromaDBVectorMemoryConfig(
+            collection_name="preferences",
+            persistence_path=os.path.join(str(Path.home()), ".chromadb_autogen"),
+            k=2,  # Return top  k results
+            score_threshold=0.4,  # Minimum similarity score
+        )
+    )
+
+    for i in range(len(data)):
+        await chroma_user_memory.add(
+            MemoryContent(
+                # Bug修复：将整数类型转换为字符串类型，以支持字符串拼接操作
+                content="content" + str(i),
+                mime_type=MemoryMimeType.TEXT,
+                metadata={"category": "history", "type": "workflow"},
+            )
+        )
+    await chroma_user_memory.close()
+    
 
 def query_price(airplane: str) -> str:
     return "The price is $1234"
@@ -79,23 +107,22 @@ flights_refunder = AssistantAgent(
 termination = HandoffTermination(target="user") | TextMentionTermination("TERMINATE")
 team = Swarm([travel_agent, flights_refunder, flights_queryer, flights_pricer], termination_condition=termination)
 
-task = "I need to query flight."
+#task = "I need to query flight."
+task = "I need to refund my flight."
 
-async def main() -> None:
-    async def run_team_stream() -> None:
-        task_result = await Console(team.run_stream(task=task))
+async def run_team_stream() -> None:
+    task_result = await Console(team.run_stream(task=task))
+    last_message = task_result.messages[-1]
+
+    while isinstance(last_message, HandoffMessage) and last_message.target == "user":
+        user_message = input("User: ")
+
+        task_result = await Console(
+            team.run_stream(task=HandoffMessage(source="user", target=last_message.source, content=user_message))
+        )
         last_message = task_result.messages[-1]
 
-        while isinstance(last_message, HandoffMessage) and last_message.target == "user":
-            user_message = input("User: ")
+    # 写入Chroma数据库
+    await write_to_chroma(task_result.messages)
 
-            task_result = await Console(
-                team.run_stream(task=HandoffMessage(source="user", target=last_message.source, content=user_message))
-            )
-            last_message = task_result.messages[-1]
-
-
-    # Use asyncio.run(...) if you are running this in a script.
-    await run_team_stream()
-
-asyncio.run(main())
+asyncio.run(run_team_stream())

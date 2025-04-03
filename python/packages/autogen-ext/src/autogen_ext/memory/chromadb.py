@@ -376,6 +376,18 @@ class ChromaDBVectorMemory(Memory, Component[ChromaDBVectorMemoryConfig]):
         except Exception as e:
             logger.error(f"Failed to query ChromaDB: {e}")
             raise
+        
+    async def delete(self, id: str) -> None:
+        """Delete a memory content from ChromaDB."""
+        self._ensure_initialized()
+        if self._collection is None:
+            raise RuntimeError("Failed to initialize ChromaDB")
+        try:
+            # Delete from ChromaDB
+            self._collection.delete(ids=[id])   
+        except Exception as e:
+            logger.error(f"Failed to delete content from ChromaDB: {e}")
+            raise
 
     async def clear(self) -> None:
         """Clear all entries from memory."""

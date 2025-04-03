@@ -1,0 +1,142 @@
+{
+    "ids": [
+        "aa81829a-acfe-46c2-9fc8-2602ba32da80",
+        "8416fc94-cd2e-4981-9769-b19ef6743598",
+        "a4e8a163-2123-41cc-9fb3-d5c0aa978349",
+        "118eb7f9-bbae-400c-b1a5-052a50caeee7",
+        "8fe9a45e-70bc-4e14-911c-2edaf9e32e72",
+        "74ab48fa-84a8-45eb-9fa3-8b464bf244f1",
+        "bc97cb26-fbb6-45df-871a-e907c480b847",
+        "a25e54b3-8a5d-43ac-b58b-c2546f3b68bb",
+        "fb362b19-6cf1-4b11-a5e2-d86e4dad6c83",
+        "84bcd6da-aade-4509-b9e4-9c8d0171a951",
+        "9840fab0-201a-4e7b-902a-b4b4d62dce95",
+        "600da700-eab7-4a60-9f0a-5b6d933f71ec",
+        "72e83d89-a989-4e05-96b4-cf60ff10c8da",
+        "892c3761-35be-451b-b79d-3fa8a0734ad1",
+        "649e4802-fa12-42c3-ab71-2924ee1f3cd8",
+        "053d2b3f-626f-4174-b364-6e88068ce9af",
+        "5924e1ec-155d-4eb3-b89a-c1de6247d47b",
+        "0"
+    ],
+    "embeddings": null,
+    "documents": [
+        "source='user' models_usage=None metadata={} target='flights_refunder' content='555444333' context=[] type='HandoffMessage'",     
+        "source='flights_refunder' models_usage=RequestUsage(prompt_tokens=414, completion_tokens=23) metadata={} content=[FunctionCall(id='call_0_33d6bea1-c9e2-4dc9-8656-f182cc86c33f', arguments='{\"flight_id\":\"555444333\"}', name='refund_flight')] type='ToolCallRequestEvent'",
+        "content0",
+        "content1",
+        "content2",
+        "content3",
+        "content4",
+        "content5",
+        "content6",
+        "content7",
+        "content8",
+        "content9",
+        "content0",
+        "content0",
+        "content0",
+        "用户喜欢蓝色",
+        "用户喜欢蓝色",
+        "content0"
+    ],
+    "uris": null,
+    "data": null,
+    "metadatas": [
+        {
+            "category": "history",
+            "mime_type": "MemoryMimeType.TEXT",
+            "type": "workflow"
+        },
+        {
+            "category": "history",
+            "mime_type": "MemoryMimeType.TEXT",
+            "type": "workflow"
+        },
+        {
+            "category": "history",
+            "mime_type": "MemoryMimeType.TEXT",
+            "type": "workflow"
+        },
+        {
+            "category": "history",
+            "mime_type": "MemoryMimeType.TEXT",
+            "type": "workflow"
+        },
+        {
+            "category": "history",
+            "mime_type": "MemoryMimeType.TEXT",
+            "type": "workflow"
+        },
+        {
+            "category": "history",
+            "mime_type": "MemoryMimeType.TEXT",
+            "type": "workflow"
+        },
+        {
+            "category": "history",
+            "mime_type": "MemoryMimeType.TEXT",
+            "type": "workflow"
+        },
+        {
+            "category": "history",
+            "mime_type": "MemoryMimeType.TEXT",
+            "type": "workflow"
+        },
+        {
+            "category": "history",
+            "mime_type": "MemoryMimeType.TEXT",
+            "type": "workflow"
+        },
+        {
+            "category": "history",
+            "mime_type": "MemoryMimeType.TEXT",
+            "type": "workflow"
+        },
+        {
+            "category": "history",
+            "mime_type": "MemoryMimeType.TEXT",
+            "type": "workflow"
+        },
+        {
+            "category": "history",
+            "mime_type": "MemoryMimeType.TEXT",
+            "type": "workflow"
+        },
+        {
+            "category": "history",
+            "mime_type": "MemoryMimeType.TEXT",
+            "type": "workflow"
+        },
+        {
+            "category": "history",
+            "mime_type": "MemoryMimeType.TEXT",
+            "type": "workflow"
+        },
+        {
+            "category": "history",
+            "mime_type": "MemoryMimeType.TEXT",
+            "type": "workflow"
+        },
+        {
+            "category": "color",
+            "id": "5b95ef46-9f5a-419a-b56d-25ca718e9ae5",
+            "mime_type": "MemoryMimeType.TEXT",
+            "priority": "high"
+        },
+        {
+            "category": "color",
+            "id": "00d0d95a-e534-471b-b0fd-5f758b78c58f",
+            "mime_type": "MemoryMimeType.TEXT",
+            "priority": "high"
+        },
+        {
+            "category": "history",
+            "type": "workflow"
+        }
+    ],
+    "included": [
+        "documents",
+        "metadatas"
+    ]
+}

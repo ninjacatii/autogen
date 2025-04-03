@@ -23,12 +23,32 @@ async def write_to_chroma(data: Sequence[str]):
             ids=[str(i)]
         )
 
+async def delete_preferences_data(ids: chromadb.IDs):
+    """删除指定ID的记录"""
+    collection.delete(ids=ids)
+    print(f"已删除ID为 {ids} 的记录")
+
 async def display_preferences_data():
     # 获取集合中的所有数据
     all_data = collection.get()
-    print(json.dumps(all_data, indent=4, ensure_ascii=False))      
+    # 写入JSON文件
+    json_path = SCRIPT_DIR / "chroma-origin.json"
+    with open(json_path, 'w', encoding='utf-8') as f:
+        json.dump(all_data, f, indent=4, ensure_ascii=False)
+    print(f"数据已写入: {json_path}")  
+
+async def delete_all_preferences_data():
+    """删除集合中的所有记录"""
+    all_data = collection.get()
+    if all_data['ids']:
+        collection.delete(ids=all_data['ids'])
+        print("已删除所有记录")
+    else:
+        print("集合中无记录可删除")       
 
 async def run_team_stream() -> None:
+    await delete_all_preferences_data()
+
     # 写入Chroma数据库
     # await write_to_chroma(["111"])
     # 显示preferences集合里的所有数据

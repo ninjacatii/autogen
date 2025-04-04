@@ -7,16 +7,16 @@
         "content0"
     ],
     "uris": null,
+    "included": [
+        "metadatas",
+        "documents"
+    ],
     "data": null,
     "metadatas": [
         {
+            "type": "workflow",
             "category": "history",
-            "timestamp": "2025-04-04 16:03:33",
-            "type": "workflow"
+            "timestamp": "2025-04-04 22:09:02"
         }
-    ],
-    "included": [
-        "documents",
-        "metadatas"
     ]
 }

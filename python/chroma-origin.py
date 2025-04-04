@@ -3,7 +3,7 @@ from pathlib import Path
 import asyncio
 from typing import Sequence
 import chromadb
-import json
+from autogen_core.tools import Utils
 
 # 获取当前脚本所在目录
 SCRIPT_DIR = Path(__file__).parent.absolute()
@@ -43,14 +43,7 @@ async def delete_preferences_data(ids: chromadb.IDs):
     collection.delete(ids=ids)
     print(f"已删除ID为 {ids} 的记录")
 
-async def display_preferences_data():
-    # 获取集合中的所有数据
-    all_data = collection.get()
-    # 写入JSON文件
-    json_path = SCRIPT_DIR / "chroma-origin.json"
-    with open(json_path, 'w', encoding='utf-8') as f:
-        json.dump(all_data, f, indent=4, ensure_ascii=False)
-    print(f"数据已写入: {json_path}")  
+ 
 
 async def delete_all_preferences_data():
     """删除集合中的所有记录"""
@@ -66,7 +59,7 @@ async def run_team_stream() -> None:
 
     # 写入Chroma数据库
     await upsert_to_chroma(["111"])
-    # 显示preferences集合里的所有数据
-    await display_preferences_data()
+
+    await Utils.display_preferences_data(path=str(SCRIPT_DIR / ".chromadb_autogen"))
 
 asyncio.run(run_team_stream())

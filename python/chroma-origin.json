@@ -1,10 +1,20 @@
 {
-    "ids": [],
+    "ids": [
+        "0"
+    ],
     "embeddings": null,
-    "documents": [],
+    "documents": [
+        "content0"
+    ],
     "uris": null,
     "data": null,
-    "metadatas": [],
+    "metadatas": [
+        {
+            "category": "history",
+            "timestamp": "2025-04-04 16:03:33",
+            "type": "workflow"
+        }
+    ],
     "included": [
         "documents",
         "metadatas"

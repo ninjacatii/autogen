@@ -1,3 +1,4 @@
+from datetime import datetime
 from pathlib import Path
 import asyncio
 from typing import Sequence
@@ -16,12 +17,26 @@ collection = client.get_or_create_collection(name="preferences")
 async def write_to_chroma(data: Sequence[str]):
     for i in range(len(data)):
         content = "content" + str(i)
+        current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")  # 获取当前时间字符串
         # 写入数据
         collection.add(
             documents=[content],
-            metadatas=[{"category": "history", "type": "workflow"}],
+            metadatas=[{"category": "history", "type": "workflow", "timestamp": current_time}],
             ids=[str(i)]
         )
+
+async def upsert_to_chroma(data: Sequence[str]):
+    """更新或插入数据到preferences集合"""
+    for i in range(len(data)):
+        content = "content" + str(i)
+        current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")  # 获取当前时间字符串
+        # 使用upsert方法
+        collection.upsert(
+            documents=[content],
+            metadatas=[{"category": "history", "type": "workflow", "timestamp": current_time}],
+            ids=[str(i)]
+        )
+    print("数据已更新或插入")
 
 async def delete_preferences_data(ids: chromadb.IDs):
     """删除指定ID的记录"""
@@ -47,10 +62,10 @@ async def delete_all_preferences_data():
         print("集合中无记录可删除")       
 
 async def run_team_stream() -> None:
-    await delete_all_preferences_data()
+    # await delete_all_preferences_data()
 
     # 写入Chroma数据库
-    # await write_to_chroma(["111"])
+    await upsert_to_chroma(["111"])
     # 显示preferences集合里的所有数据
     await display_preferences_data()
 

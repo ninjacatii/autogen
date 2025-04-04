@@ -1,6 +1,6 @@
 {
     "ids": [
-        "5d3aeb0c-1319-4281-bfee-66b1844b7823"
+        "user:idcard"
     ],
     "embeddings": null,
     "documents": [
@@ -14,10 +14,10 @@
     "data": null,
     "metadatas": [
         {
-            "timestamp": "2025-04-04 22:41:52",
             "mime_type": "MemoryMimeType.TEXT",
-            "category": "user",
-            "type": "idcard"
+            "timestamp": "2025-04-04 23:03:07",
+            "type": "idcard",
+            "category": "user"
         }
     ]
 }

@@ -26,7 +26,7 @@ async def write_to_chroma(type: str, data: str):
             content=data,
             mime_type=MemoryMimeType.TEXT,
             metadata={"category": "user", "type": type, "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")},
-        )
+        ), overwrite=True
     )
 
     await chroma_user_memory.close()

@@ -58,7 +58,8 @@ async def run_team_stream() -> None:
     # await delete_all_preferences_data()
 
     # 写入Chroma数据库
-    await upsert_to_chroma(["111"])
+    #await upsert_to_chroma(["111"])
+    await delete_preferences_data(["0"])
 
     await Utils.display_preferences_data(path=str(SCRIPT_DIR / ".chromadb_autogen"))
 

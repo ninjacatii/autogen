@@ -1,8 +1,8 @@
 from pathlib import Path
 
 import asyncio
-from typing import Sequence
-
+from datetime import datetime
+from autogen_core.tools import Utils
 from autogen_core.memory import MemoryContent, MemoryMimeType
 from autogen_ext.memory.chromadb import ChromaDBVectorMemory, PersistentChromaDBVectorMemoryConfig
 
@@ -10,7 +10,7 @@ from autogen_ext.memory.chromadb import ChromaDBVectorMemory, PersistentChromaDB
 SCRIPT_DIR = Path(__file__).parent.absolute()
 
 # 添加连接Chroma数据库并写入数据的函数
-async def write_to_chroma(data: Sequence[str]):
+async def write_to_chroma(type: str, data: str):
     # Initialize ChromaDB memory with custom config
     chroma_user_memory = ChromaDBVectorMemory(
         config=PersistentChromaDBVectorMemoryConfig(
@@ -21,19 +21,20 @@ async def write_to_chroma(data: Sequence[str]):
         )
     )
 
-    for i in range(len(data)):
-        await chroma_user_memory.add(
-            MemoryContent(
-                # Bug修复：将整数类型转换为字符串类型，以支持字符串拼接操作
-                content="content" + str(i),
-                mime_type=MemoryMimeType.TEXT,
-                metadata={"category": "history", "type": "workflow"},
-            )
+    await chroma_user_memory.add(
+        MemoryContent(
+            content=data,
+            mime_type=MemoryMimeType.TEXT,
+            metadata={"category": "user", "type": type, "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")},
         )
+    )
+
     await chroma_user_memory.close()
 
 async def run_team_stream() -> None:
     # 写入Chroma数据库
-    await write_to_chroma(["111"])
+    await write_to_chroma("idcard", "333444555")
+
+    await Utils.display_preferences_data(path=str(SCRIPT_DIR / ".chromadb_autogen"))
 
 asyncio.run(run_team_stream())

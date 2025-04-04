@@ -1,10 +1,10 @@
 {
     "ids": [
-        "0"
+        "5d3aeb0c-1319-4281-bfee-66b1844b7823"
     ],
     "embeddings": null,
     "documents": [
-        "content0"
+        "333444555"
     ],
     "uris": null,
     "included": [
@@ -14,9 +14,10 @@
     "data": null,
     "metadatas": [
         {
-            "type": "workflow",
-            "category": "history",
-            "timestamp": "2025-04-04 22:09:02"
+            "timestamp": "2025-04-04 22:41:52",
+            "mime_type": "MemoryMimeType.TEXT",
+            "category": "user",
+            "type": "idcard"
         }
     ]
 }

@@ -68,12 +68,12 @@ async def run_team_stream() -> None:
 
     # 写入Chroma数据库
     #await upsert_to_chroma(["111"])
-    # await delete_preferences_data(["user:ID Card No."])
-    result: str | None = await query_by_type("ID Card No.")
-    if result is not None:
-        print("\n1:" + result)
-    else:
-        print("\n1:No result found")
+    await delete_preferences_data(["user:ID Card No."])
+    # result: str | None = await query_by_type("ID Card No.")
+    # if result is not None:
+    #     print("\n1:" + result)
+    # else:
+    #     print("\n1:No result found")
 
     await Utils.display_preferences_data(path=str(SCRIPT_DIR / ".chromadb_autogen"))
 

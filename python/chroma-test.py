@@ -33,7 +33,7 @@ async def write_to_chroma(type: str, data: str):
 
 async def run_team_stream() -> None:
     # 写入Chroma数据库
-    await write_to_chroma("idcard", "333444555")
+    # await write_to_chroma("idcard", "333444555")
 
     await Utils.display_preferences_data(path=str(SCRIPT_DIR / ".chromadb_autogen"))
 

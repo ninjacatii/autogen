@@ -9,7 +9,7 @@ from autogen_core.models import SystemMessage
 from chromadb import HttpClient, PersistentClient
 from chromadb.api import ClientAPI
 from chromadb.api.models.Collection import Collection
-from chromadb.api.types import Document, Include, Metadata
+from chromadb.api.types import Document, IncludeEnum, Metadata
 from pydantic import BaseModel, Field
 from typing_extensions import Self
 
@@ -291,7 +291,7 @@ class ChromaDBVectorMemory(Memory, Component[ChromaDBVectorMemoryConfig]):
 
         return UpdateContextResult(memories=query_results)
 
-    async def add(self, content: MemoryContent, cancellation_token: CancellationToken | None = None, overwrite: bool = False) -> None:
+    async def add(self, content: MemoryContent, cancellation_token: CancellationToken | None = None) -> None:
         """Add a memory content to ChromaDB."""
         self._ensure_initialized()
         if self._collection is None:
@@ -306,7 +306,7 @@ class ChromaDBVectorMemory(Memory, Component[ChromaDBVectorMemoryConfig]):
             metadata_dict["mime_type"] = str(content.mime_type)
 
             # Add to ChromaDB
-            self._collection.upsert(documents=[text], metadatas=[metadata_dict], ids=[str(uuid.uuid4()) if not overwrite else metadata_dict["category"] + ":" + metadata_dict["type"]])
+            self._collection.add(documents=[text], metadatas=[metadata_dict], ids=[str(uuid.uuid4())])
 
         except Exception as e:
             logger.error(f"Failed to add content to ChromaDB: {e}")
@@ -331,7 +331,7 @@ class ChromaDBVectorMemory(Memory, Component[ChromaDBVectorMemoryConfig]):
             results = self._collection.query(
                 query_texts=[query_text],
                 n_results=self._config.k,
-                include=[Include.documents, Include.metadatas, Include.distances],
+                include=[IncludeEnum.documents, IncludeEnum.metadatas, IncludeEnum.distances],
                 **kwargs,
             )
 
@@ -375,18 +375,6 @@ class ChromaDBVectorMemory(Memory, Component[ChromaDBVectorMemoryConfig]):
 
         except Exception as e:
             logger.error(f"Failed to query ChromaDB: {e}")
-            raise
-        
-    async def delete(self, id: str) -> None:
-        """Delete a memory content from ChromaDB."""
-        self._ensure_initialized()
-        if self._collection is None:
-            raise RuntimeError("Failed to initialize ChromaDB")
-        try:
-            # Delete from ChromaDB
-            self._collection.delete(ids=[id])   
-        except Exception as e:
-            logger.error(f"Failed to delete content from ChromaDB: {e}")
             raise
 
     async def clear(self) -> None:

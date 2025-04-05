@@ -32,6 +32,9 @@ async def query_by_type(type_value: str, limit: int = 1) -> str | None:
         return results['documents'][0]
     return None
 
+async def query_id_card_no() -> str | None:
+    return await query_by_type("ID Card No.")
+
 async def write_to_chroma(personal_info_type: str, personal_info_data: str):
     # 使用upsert方法
     collection.upsert(
@@ -111,9 +114,13 @@ flights_refunder = AssistantAgent(
     "flights_refunder",
     model_client=model_client,
     handoffs=["travel_agent", "user"],
-    tools=[refund_flight],
+    tools=[refund_flight, query_id_card_no],
     system_message="""You are an agent specialized in refunding flights.
     You only need the ID Card No. of the user to refund a flight.
+    You can first query the ID Card No. of the user using the query_id_card_no tool.
+    If the ID Card No. of the user is not found, you can ask the user to provide it.
+    If the ID Card No. of the user is founded, you need send the ID Card No. to the user to confirm.
+    If the user consider the ID Card No. is not correct, you can ask the user to provide by handoff to the user.
     You have the ability to refund a flight using the refund_flight tool.
     If you need information from the user, you must first send your message, then you can handoff to the user.
     When the transaction is complete, handoff to the travel agent to finalize.""",

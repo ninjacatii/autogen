@@ -1,10 +1,12 @@
 {
     "ids": [
-        "user:ID Card No."
+        "user:ID Card No.",
+        "user:ID Card Number"
     ],
     "embeddings": null,
     "documents": [
-        "987123"
+        "777555333",
+        "555444666"
     ],
     "uris": null,
     "included": [
@@ -14,8 +16,13 @@
     "data": null,
     "metadatas": [
         {
-            "timestamp": "2025-04-05 21:16:14",
             "type": "ID Card No.",
+            "category": "user",
+            "timestamp": "2025-04-05 23:09:39"
+        },
+        {
+            "timestamp": "2025-04-05 22:52:45",
+            "type": "ID Card Number",
             "category": "user"
         }
     ]

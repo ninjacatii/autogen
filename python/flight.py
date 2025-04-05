@@ -8,31 +8,38 @@ from autogen_agentchat.conditions import HandoffTermination, TextMentionTerminat
 from autogen_agentchat.messages import HandoffMessage
 from autogen_agentchat.teams import Swarm
 from autogen_agentchat.ui import Console
-from autogen_core.memory import MemoryContent, MemoryMimeType
+from autogen_core.tools import Utils
 from autogen_ext.models.openai import OpenAIChatCompletionClient
-from autogen_ext.memory.chromadb import ChromaDBVectorMemory, PersistentChromaDBVectorMemoryConfig
+import chromadb
+from chromadb.api.types import GetResult
 
-# 添加连接Chroma数据库并写入数据的函数
+# 获取当前脚本所在目录
+SCRIPT_DIR = Path(__file__).parent.absolute()
+DB_PATH = str(SCRIPT_DIR / ".chromadb_autogen")
+# 初始化Chroma客户端
+client = chromadb.PersistentClient(path=DB_PATH)
+# 获取或创建一个集合
+collection = client.get_or_create_collection(name="preferences")
+
+async def query_by_type(type_value: str, limit: int = 1) -> str | None:
+    """根据metadata中的type字段查询记录"""
+    results: GetResult = collection.get(
+        where={"type": type_value},  # 查询条件
+        limit=limit,  # 返回结果数量限制
+        include=["documents", "metadatas"]  # 包含文档内容和元数据
+    )
+    if results['documents'] is not None and len(results['documents']) > 0:
+        return results['documents'][0]
+    return None
+
 async def write_to_chroma(personal_info_type: str, personal_info_data: str):
-    # 获取当前脚本所在目录
-    SCRIPT_DIR = Path(__file__).parent.absolute()
-    # Initialize ChromaDB memory with custom config
-    chroma_user_memory = ChromaDBVectorMemory(
-        config=PersistentChromaDBVectorMemoryConfig(
-            collection_name="preferences",
-            persistence_path=str(SCRIPT_DIR / ".chromadb_autogen"),  # 修改为使用当前目录
-            k=2,  # Return top  k results
-            score_threshold=0.4,  # Minimum similarity score
-        )
+    # 使用upsert方法
+    collection.upsert(
+        documents=[personal_info_data],
+        metadatas=[{"category": "user", "type": personal_info_type, "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")}],
+        ids=["user:" + personal_info_type]
     )
-    await chroma_user_memory.add(
-        MemoryContent(
-            content=personal_info_data,
-            mime_type=MemoryMimeType.TEXT,
-            metadata={"category": "user", "type": personal_info_type, "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")},
-        ), overwrite=True
-    )
-    await chroma_user_memory.close()
+    await Utils.display_preferences_data(path=DB_PATH)
 
 def query_price(airplane: str) -> str:
     return "The price is $1234"

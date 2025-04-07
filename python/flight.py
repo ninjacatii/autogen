@@ -1,14 +1,16 @@
+import json
 from pathlib import Path
 
 import asyncio
 from datetime import datetime
+from typing_extensions import Annotated
 
 from autogen_agentchat.agents import AssistantAgent
 from autogen_agentchat.conditions import HandoffTermination, TextMentionTermination
 from autogen_agentchat.messages import HandoffMessage
 from autogen_agentchat.teams import Swarm
 from autogen_agentchat.ui import Console
-from autogen_core.tools import Utils
+from autogen_core.tools import FunctionTool, Utils
 from autogen_ext.models.openai import OpenAIChatCompletionClient
 import chromadb
 from chromadb.api.types import GetResult
@@ -50,9 +52,15 @@ def query_price(airplane: str) -> str:
 def query_flight(date: str) -> str: 
     return f"{date}: Boeing 737 airplane"
 
-def refund_flight(id_card_no: str) -> str:
+def refund_flight(id_card_no: Annotated[str, "User's ID card No."]) -> str:
     """Refund a flight"""
     return f"Flight refunded by user's ID Card No. :{id_card_no}"
+
+refund_flight_tool = FunctionTool(refund_flight, description="Flight refunded by user's ID Card No.")
+data = refund_flight_tool.schema
+# 格式化输出
+formatted_json = json.dumps(data, indent=4, ensure_ascii=False)
+print("\n" + formatted_json)
 
 model_client = OpenAIChatCompletionClient(
     #model="deepseek-reasoner",#不支持
@@ -114,14 +122,14 @@ flights_refunder = AssistantAgent(
     "flights_refunder",
     model_client=model_client,
     handoffs=["travel_agent", "user"],
-    tools=[refund_flight, query_id_card_no],
+    tools=[refund_flight_tool, query_id_card_no],
     system_message="""You are an agent specialized in refunding flights.
     You only need the ID Card No. of the user to refund a flight.
     You can first query the ID Card No. of the user using the query_id_card_no tool.
     If the ID Card No. of the user is not found, you can ask the user to provide it.
     If the ID Card No. of the user is founded, you need send the ID Card No. to the user to confirm.
     If the user consider the ID Card No. is not correct, you can ask the user to provide by handoff to the user.
-    You have the ability to refund a flight using the refund_flight tool.
+    You have the ability to refund a flight using the refund_flight_tool tool.
     If you need information from the user, you must first send your message, then you can handoff to the user.
     When the transaction is complete, handoff to the travel agent to finalize.""",
 )

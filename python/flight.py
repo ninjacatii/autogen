@@ -15,6 +15,7 @@ from autogen_ext.models.openai import OpenAIChatCompletionClient
 import chromadb
 from chromadb.api.types import GetResult
 
+
 # 获取当前脚本所在目录
 SCRIPT_DIR = Path(__file__).parent.absolute()
 DB_PATH = str(SCRIPT_DIR / ".chromadb_autogen")

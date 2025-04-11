@@ -102,7 +102,7 @@ async def test() -> None:
     # Start the runtime and publish a message to the assistant.
     runtime.start()
     await runtime.publish_message(
-        Message("请做一个贪吃蛇游戏."), DefaultTopicId()
+        Message("请用pygame库做一个扫雷游戏."), DefaultTopicId()
     )
 
     # Wait for the runtime to stop when idle.

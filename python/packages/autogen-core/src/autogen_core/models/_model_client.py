@@ -35,6 +35,7 @@ class ModelFamily:
     CLAUDE_3_7_SONNET = "claude-3.7-sonnet"
     QWQ_32B = "qwq-32b"
     QWEN_PLUS = "qwen-plus"
+    QWEN_CODER_PLUS = "qwen-coder-plus"
     DEEPSEEK_CHAT = "deepseek-chat"
     DEEPSEEK_REASONER = "deepseek-reasoner"
     UNKNOWN = "unknown"
@@ -56,6 +57,7 @@ class ModelFamily:
         "claude-3.5-sonnet",
         "qwq-32b",
         "qwen-plus",
+        "qwen-coder-plus",
         "deepseek-chat",
         "deepseek-reasoner",
         "unknown",

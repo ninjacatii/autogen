@@ -202,6 +202,13 @@ _MODEL_INFO: Dict[str, ModelInfo] = {
         "family": ModelFamily.QWEN_PLUS,
         "structured_output": True,
     },
+    "qwen-coder-plus": {
+        "vision": True,
+        "function_calling": True,
+        "json_output": True,
+        "family": ModelFamily.QWEN_CODER_PLUS,
+        "structured_output": True,
+    },
     "deepseek-chat": {
         "vision": True,
         "function_calling": True,
@@ -244,6 +251,7 @@ _MODEL_TOKEN_LIMITS: Dict[str, int] = {
     "gemini-2.0-flash": 1048576,
     "qwq-32b": 32768,
     "qwen-plus": 131072,
+    "qwen-coder-plus": 128000, 
     "deepseek-chat": 128000,
     "deepseek-reasoner": 128000,
 }

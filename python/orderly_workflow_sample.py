@@ -113,9 +113,9 @@ class UserAgent(RoutedAgent):
 async def product_introduction():
     model_client = OpenAIChatCompletionClient(
         #model="deepseek-reasoner",#不支持
-        model="deepseek-chat",#支持差
+        # model="deepseek-chat",#支持差
         #model="qwen-plus",
-        #model="gemini-2.0-flash",
+        model="gemini-2.0-flash",
         temperature=0,
         # api_key="YOUR_API_KEY",
     )

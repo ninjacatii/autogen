@@ -31,7 +31,7 @@ from autogen_core.models import (
     SystemMessage,
     UserMessage,
 )
-from autogen_core.models._model_client import ModelFamily
+from autogen_core.models import ModelFamily
 from autogen_core.tools import FunctionTool
 from autogen_ext.models.openai import OpenAIChatCompletionClient
 from autogen_ext.models.replay import ReplayChatCompletionClient

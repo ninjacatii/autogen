@@ -38,7 +38,7 @@ class IllustratorAgent(BaseGroupChatAgent):
 
     async def _image_gen(
         self, character_appearence: str, style_attributes: str, worn_and_carried: str, scenario: str
-    ) -> Image:
+    ) -> str:
         prompt = f"Digital painting of a {character_appearence} character with {style_attributes}. Wearing {worn_and_carried}, {scenario}."
         url = f"https://image.pollinations.ai/prompt/{prompt}?width=256&height=256&enhance=true&private=true"
         data: bytes = await self._download_image_async(url)
@@ -50,8 +50,9 @@ class IllustratorAgent(BaseGroupChatAgent):
         output_path = Path(__file__).parent / "generated_images" / f"{now}.png"
         output_path.parent.mkdir(exist_ok=True)
         response.to_file(output_path)
+        Image.from_pil(response.image.resize((256, 256)))
 
-        return response
+        return str(output_path)
 
     @message_handler
     async def handle_request_to_speak(self, message: RequestToSpeak, ctx: MessageContext) -> None:  # type: ignore
@@ -74,11 +75,11 @@ class IllustratorAgent(BaseGroupChatAgent):
             arguments = json.loads(tool_call.arguments)
             Console().print(arguments)
             result = await self._image_gen_tool.run_json(arguments, ctx.cancellation_token)
-            assert isinstance(result, Image)
-            image = result
+            assert isinstance(result, str)
+            # image = result
             # image = Image.from_base64(self._image_gen_tool.return_value_as_string(result))
-            image = Image.from_pil(image.image.resize((256, 256)))
-            images.append(image)
+            # image = Image.from_pil(image.image.resize((256, 256)))
+            images.append(result)
         await self.publish_message(
             GroupChatMessage(body=UserMessage(content=images, source=self.id.type)),
             DefaultTopicId(type=self._group_chat_topic_type),

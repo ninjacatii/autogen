@@ -3,7 +3,7 @@ import uuid
 from autogen_core import SingleThreadedAgentRuntime, TopicId, TypeSubscription
 from autogen_core.models import UserMessage
 from autogen_ext.models.openai import OpenAIChatCompletionClient
-from autogen_core.my_group_chat import GroupChatMessage, EditorAgent, WriterAgent, UserAgent, GroupChatManager
+from autogen_core.my_group_chat import GroupChatMessage, EditorAgent, WriterAgent, UserAgent, GroupChatManager, IllustratorAgent
 
 async def test() -> None:
     runtime = SingleThreadedAgentRuntime()
@@ -21,9 +21,9 @@ async def test() -> None:
 
     model_client = OpenAIChatCompletionClient(
         #model="deepseek-reasoner",#不支持
-        #model="deepseek-chat",#支持差
+        model="deepseek-chat",#支持差
         # model="qwen-coder-plus",
-         model="qwen-plus",
+        #  model="qwen-plus",
         # model="gemini-2.0-flash",
         temperature=0,
         # api_key="YOUR_API_KEY",
@@ -53,25 +53,21 @@ async def test() -> None:
     await runtime.add_subscription(TypeSubscription(topic_type=writer_topic_type, agent_type=writer_agent_type.type))
     await runtime.add_subscription(TypeSubscription(topic_type=group_chat_topic_type, agent_type=writer_agent_type.type))
 
-    #暂时关掉IllustratorAgent
-    # illustrator_agent_type = await IllustratorAgent.register(
-    #     runtime,
-    #     illustrator_topic_type,
-    #     lambda: IllustratorAgent(
-    #         description=illustrator_description,
-    #         group_chat_topic_type=group_chat_topic_type,
-    #         model_client=model_client,
-    #         image_client=openai.AsyncClient(
-    #             # api_key="YOUR_API_KEY",
-    #         ),
-    #     ),
-    # )
-    # await runtime.add_subscription(
-    #     TypeSubscription(topic_type=illustrator_topic_type, agent_type=illustrator_agent_type.type)
-    # )
-    # await runtime.add_subscription(
-    #     TypeSubscription(topic_type=group_chat_topic_type, agent_type=illustrator_agent_type.type)
-    # )
+    illustrator_agent_type = await IllustratorAgent.register(
+        runtime,
+        illustrator_topic_type,
+        lambda: IllustratorAgent(
+            description=illustrator_description,
+            group_chat_topic_type=group_chat_topic_type,
+            model_client=model_client,
+        ),
+    )
+    await runtime.add_subscription(
+        TypeSubscription(topic_type=illustrator_topic_type, agent_type=illustrator_agent_type.type)
+    )
+    await runtime.add_subscription(
+        TypeSubscription(topic_type=group_chat_topic_type, agent_type=illustrator_agent_type.type)
+    )
 
     user_agent_type = await UserAgent.register(
         runtime,
@@ -99,7 +95,7 @@ async def test() -> None:
     await runtime.publish_message(
         GroupChatMessage(
             body=UserMessage(
-                content="请写一个关于赵云的短篇故事，字数限制在200字以内。",
+                content="请写一个关于大熊猫宝宝的短篇故事，字数限制在200字以内，并配上三幅卡通风格的插图。",
                 # content="Please write a short story about the gingerbread man with up to 3 photo-realistic illustrations.",
                 source="User",
             )

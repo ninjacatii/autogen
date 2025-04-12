@@ -59,6 +59,9 @@ class Image:
     def from_base64(cls, base64_str: str) -> Image:
         return cls(PILImage.open(BytesIO(base64.b64decode(base64_str))))
 
+    def to_file(self, file_path: Path) -> None:
+        self.image.save(file_path)
+
     def to_base64(self) -> str:
         buffered = BytesIO()
         self.image.save(buffered, format="PNG")

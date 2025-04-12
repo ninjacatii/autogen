@@ -63,6 +63,9 @@ class Executor(RoutedAgent):
 
     @message_handler
     async def handle_message(self, message: Message, ctx: MessageContext) -> None:
+        # 这个例子举得并不好，因为第一次消息"请用pygame库做一个扫雷游戏."广播时，Executor的handle_message方法
+        # 会被调用，只是在extract_markdown_code_blocks解析时，返回为空，才不会直到副作用。
+        # 正常情况下，消息"请用pygame库做一个扫雷游戏."应该只被Assistant的handle_message方法调用，
         code_blocks = extract_markdown_code_blocks(message.content)
         if code_blocks:
             result = await self._code_executor.execute_code_blocks(
@@ -73,7 +76,7 @@ class Executor(RoutedAgent):
 
 async def test() -> None:
     SCRIPT_DIR = Path(__file__).parent.absolute()
-    work_dir = Path(SCRIPT_DIR)
+    work_dir = Path(SCRIPT_DIR) / "coding"
     work_dir.mkdir(exist_ok=True)
 
     # Create an local embedded runtime.

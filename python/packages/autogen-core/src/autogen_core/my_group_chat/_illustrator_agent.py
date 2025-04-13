@@ -54,7 +54,7 @@ class IllustratorAgent(BaseGroupChatAgent):
 
             # 保存图片到本地文件
             now: str = datetime.now().strftime("%Y%m%d%H%M%S")
-            output_path = Path(__file__).parent / "generated_images" / f"{now}.png"
+            output_path = Path(f"D:\\git\\autogen\\python\\work\\generated_images\\{now}.png")
             output_path.parent.mkdir(exist_ok=True)
             response.to_file(output_path)
             Image.from_pil(response.image.resize((256, 256)))

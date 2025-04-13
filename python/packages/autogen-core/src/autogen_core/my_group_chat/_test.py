@@ -21,9 +21,10 @@ async def test() -> None:
 
     model_client = OpenAIChatCompletionClient(
         #model="deepseek-reasoner",#不支持
-        model="deepseek-chat",#支持差
+        #model="deepseek-chat",#支持差
+        #model="gemini-2.5-pro-preview-03-25",
         # model="qwen-coder-plus",
-        #  model="qwen-plus",
+        model="qwen-plus",
         # model="gemini-2.0-flash",
         temperature=0,
         # api_key="YOUR_API_KEY",
@@ -95,7 +96,7 @@ async def test() -> None:
     await runtime.publish_message(
         GroupChatMessage(
             body=UserMessage(
-                content="请写一个关于大熊猫宝宝的短篇故事，字数限制在200字以内，并配上三幅卡通风格的插图。",
+                content="请写一个关于大熊猫宝宝的短篇故事，字数限制在200字以内，并配上一幅卡通风格的插图。",
                 # content="Please write a short story about the gingerbread man with up to 3 photo-realistic illustrations.",
                 source="User",
             )

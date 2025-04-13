@@ -20,7 +20,7 @@ class BaseGroupChatAgent(RoutedAgent):
         self._group_chat_topic_type = group_chat_topic_type
         self._model_client = model_client
         self._system_message = SystemMessage(content=system_message)
-        self._chat_history: List[LLMMessage] = [self._system_message]
+        self._chat_history: List[LLMMessage] = []
 
     @message_handler
     async def handle_message(self, message: GroupChatMessage, ctx: MessageContext) -> None:
@@ -38,7 +38,7 @@ class BaseGroupChatAgent(RoutedAgent):
         self._chat_history.append(
             UserMessage(content=f"Transferred to {self.id.type}, adopt the persona immediately.", source="system")
         )
-        completion = await self._model_client.create(self._chat_history)
+        completion = await self._model_client.create([self._system_message] + self._chat_history)
         assert isinstance(completion.content, str)
         self._chat_history.append(AssistantMessage(content=completion.content, source=self.id.type))
         Console().print(Markdown(completion.content))

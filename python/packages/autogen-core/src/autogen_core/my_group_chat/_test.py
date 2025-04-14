@@ -22,7 +22,7 @@ async def test() -> None:
     model_client = OpenAIChatCompletionClient(
         #model="deepseek-reasoner",#不支持
         #model="deepseek-chat",#支持差
-        #model="gemini-2.5-pro-preview-03-25",
+        #model="gemini-2.5-pro-exp-03-25",
         # model="qwen-coder-plus",
         model="qwen-plus",
         # model="gemini-2.0-flash",
